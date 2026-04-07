@@ -120,7 +120,7 @@ const features = [
 const phoneMain = '8 (908) 049-31-34';
 const phoneSecondary = '235-00-67';
 const vkHref = 'https://vk.com/public101886759';
-const API_URL = 'http://localhost:3001/api/lead';
+const API_URL = 'https://santehnik74.onrender.com/api/lead';
 
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

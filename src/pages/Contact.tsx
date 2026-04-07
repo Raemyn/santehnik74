@@ -8,7 +8,7 @@ type LeadFormState = {
   message: string;
 };
 
-const API_URL = 'http://localhost:3001/api/lead';
+const API_URL = 'https://santehnik74.onrender.com/api/lead';
 
 export default function Contact() {
   const [form, setForm] = useState<LeadFormState>({

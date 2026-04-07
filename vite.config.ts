@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
 
   // ВАЖНО для GitHub Pages
-  base: '/santehnika.74/',
+  base: '/santehnik74/',
 
   resolve: {
     alias: {

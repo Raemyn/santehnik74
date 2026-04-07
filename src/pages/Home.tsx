@@ -19,7 +19,7 @@ const projects = [
   {
     image: '/src/assets/wCDNkoDnvSB7GX0i1h8lgtgtEPPKj08MTUvLCC2cN1Hw1vrkgEweoofXGb0nCbdrBzhJRTKqRwQDOajvqsPOxHqe.jpg',
     title: 'Замена и монтаж водосчётчиков',
-    location: "ул. Ленина, д. 45",
+    location: 'ул. Ленина, д. 45',
     description:
       'Замена старых водосчётчиков на новые с последующей пломбировкой.',
     duration: '1 час',
@@ -28,7 +28,7 @@ const projects = [
   {
     image: '/src/assets/instalacia.png',
     title: 'Монтаж инсталляции',
-    location: 'ул. Ленина, д. 45',
+    location: 'ул. Новороссиская, д. 146',
     description:
       'Установка унитаза с инсталляцией и скрытым люком для доступа к коммуникациям.',
     duration: '1 день',
@@ -37,7 +37,7 @@ const projects = [
   {
     image: '/src/assets/polteplie.jpg',
     title: 'Тёплый пол',
-    location: "Коттеджный поселок 'Гринвуд'",
+    location: "СНТ Трубопроводчик ",
     description:
       'Монтаж котельной и системы тёплого пола на площади 250 кв.м.',
     duration: '20 дней',
@@ -103,12 +103,12 @@ const features = [
   {
     icon: Clock,
     title: 'Выезд по записи',
-    desc: 'Как договоритесь с мастером',
+    desc: 'Выезд в удобное для вас время по предварительной договорённости',
   },
   {
     icon: ShieldCheck,
     title: 'Гарантия качества',
-    desc: 'Официальный договор и гарантия 12 месяцев',
+    desc: 'Даём гарантию на все выполненные работы сроком 1 год',
   },
   {
     icon: CheckCircle2,
@@ -120,6 +120,7 @@ const features = [
 const phoneMain = '8 (908) 049-31-34';
 const phoneSecondary = '235-00-67';
 const vkHref = 'https://vk.com/public101886759';
+const API_URL = 'http://localhost:3001/api/lead';
 
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -151,9 +152,24 @@ function SectionTitle({
   );
 }
 
+type LeadFormState = {
+  name: string;
+  phone: string;
+  message: string;
+};
+
 export default function Home() {
   const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [currentProject, setCurrentProject] = useState(0);
+
+  const [form, setForm] = useState<LeadFormState>({
+    name: '',
+    phone: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+  const [error, setError] = useState('');
 
   const nextProject = useCallback(() => {
     setCurrentProject((prev) => (prev + 1) % projects.length);
@@ -174,6 +190,41 @@ export default function Home() {
   }, [isAutoPlay]);
 
   const current = projects[currentProject];
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        setError(data?.error || 'Не удалось отправить заявку');
+        return;
+      }
+
+      setSuccess('Заявка отправлена. Мы свяжемся с вами в ближайшее время.');
+      setForm({
+        name: '',
+        phone: '',
+        message: '',
+      });
+    } catch {
+      setError('Ошибка сети. Проверьте сервер.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -200,7 +251,6 @@ export default function Home() {
             </h1>
 
             <p className="mb-10 text-xl leading-relaxed text-slate-200">
-              «Бесплатная помощь прямо сейчас!» <br />
               Профессиональная установка и замена счетчиков воды. <br />
               <span className="font-bold text-blue-400">
                 Стоимость счетчиков 1000 ₽.
@@ -481,9 +531,8 @@ export default function Home() {
                     setIsAutoPlay(false);
                     setCurrentProject(i);
                   }}
-                  className={`h-2 rounded-full transition-all ${
-                    currentProject === i ? 'w-8 bg-blue-600' : 'w-2 bg-slate-300'
-                  }`}
+                  className={`h-2 rounded-full transition-all ${currentProject === i ? 'w-8 bg-blue-600' : 'w-2 bg-slate-300'
+                    }`}
                   aria-label={`Открыть проект ${i + 1}`}
                 />
               ))}
@@ -548,8 +597,8 @@ export default function Home() {
               <div className="bg-slate-900 p-12 text-white lg:p-20">
                 <h3 className="mb-8 text-4xl font-bold">Свяжитесь с нами</h3>
                 <p className="mb-12 text-lg text-slate-400">
-                  Оставьте заявку, и наш специалист перезвонит вам в течение 5
-                  минут для консультации.
+                  Оставьте заявку, и наш специалист перезвонит вам
+                  для консультации.
                 </p>
 
                 <div className="space-y-8">
@@ -602,7 +651,7 @@ export default function Home() {
               </div>
 
               <div className="p-12 lg:p-20">
-                <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-6" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div>
                       <label className="mb-2 block text-sm font-bold text-slate-700">
@@ -611,6 +660,10 @@ export default function Home() {
                       <input
                         type="text"
                         placeholder="Иван Иванов"
+                        value={form.name}
+                        onChange={(e) =>
+                          setForm((prev) => ({ ...prev, name: e.target.value }))
+                        }
                         className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -621,6 +674,10 @@ export default function Home() {
                       <input
                         type="tel"
                         placeholder="+7 (___) ___-__-__"
+                        value={form.phone}
+                        onChange={(e) =>
+                          setForm((prev) => ({ ...prev, phone: e.target.value }))
+                        }
                         className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
@@ -633,15 +690,32 @@ export default function Home() {
                     <textarea
                       rows={4}
                       placeholder="Опишите вашу проблему..."
+                      value={form.message}
+                      onChange={(e) =>
+                        setForm((prev) => ({ ...prev, message: e.target.value }))
+                      }
                       className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 transition-all focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
+                  {error ? (
+                    <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                      {error}
+                    </div>
+                  ) : null}
+
+                  {success ? (
+                    <div className="rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                      {success}
+                    </div>
+                  ) : null}
+
                   <button
                     type="submit"
-                    className="w-full rounded-2xl bg-blue-600 py-5 text-lg font-bold text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-[1.02] hover:bg-blue-700"
+                    disabled={loading}
+                    className="w-full rounded-2xl bg-blue-600 py-5 text-lg font-bold text-white shadow-xl shadow-blue-600/20 transition-all hover:scale-[1.02] hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    Отправить заявку
+                    {loading ? 'Отправка...' : 'Отправить заявку'}
                   </button>
 
                   <p className="text-center text-sm text-slate-400">

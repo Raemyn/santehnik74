@@ -332,7 +332,7 @@ export default function Home() {
           <div className="mb-16 text-center">
             <SectionTitle
               eyebrow="Наши услуги"
-              title="Решим любую проблему"
+              title="Решим любую проблему2"
               description="Мы выполняем полный спектр сантехнических работ — от мелкого ремонта до проектирования систем в частных домах."
               center
             />

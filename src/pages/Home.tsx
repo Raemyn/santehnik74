@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Droplets,
@@ -15,9 +15,15 @@ import {
   Phone,
 } from 'lucide-react';
 
+import backgroundImage from '../assets/main-hero-background.webp';
+import projectImage1 from '../assets/water-meters-hero.webp';
+import projectImage2 from '../assets/toilet-installation-hero.webp';
+import projectImage3 from '../assets/underfloor-heating-installation-hero.webp';
+import aboutImage from '../assets/plumber-hero.webp';
+
 const projects = [
   {
-    image: '/src/assets/wCDNkoDnvSB7GX0i1h8lgtgtEPPKj08MTUvLCC2cN1Hw1vrkgEweoofXGb0nCbdrBzhJRTKqRwQDOajvqsPOxHqe.jpg',
+    image: projectImage1,
     title: 'Замена и монтаж водосчётчиков',
     location: 'ул. Ленина, д. 45',
     description:
@@ -26,7 +32,7 @@ const projects = [
     materials: 'Счётчики + фитинги',
   },
   {
-    image: '/src/assets/instalacia.png',
+    image: projectImage2,
     title: 'Монтаж инсталляции',
     location: 'ул. Новороссиская, д. 146',
     description:
@@ -35,13 +41,13 @@ const projects = [
     materials: 'Рама инсталляции',
   },
   {
-    image: '/src/assets/polteplie.jpg',
+    image: projectImage3,
     title: 'Тёплый пол',
-    location: "СНТ Трубопроводчик ",
+    location: 'СНТ Трубопроводчик',
     description:
       'Монтаж котельной и системы тёплого пола на площади 250 кв.м.',
     duration: '20 дней',
-    materials: 'Обговаривался с закачком',
+    materials: 'Обговаривался с заказчиком',
   },
 ];
 
@@ -191,7 +197,7 @@ export default function Home() {
 
   const current = projects[currentProject];
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -231,7 +237,7 @@ export default function Home() {
       <section className="relative flex min-h-screen items-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img
-            src="/src/assets/backgraund.avif"
+            src={backgroundImage}
             alt="Plumbing work"
             className="h-full w-full object-cover brightness-[0.4]"
             referrerPolicy="no-referrer"
@@ -332,7 +338,7 @@ export default function Home() {
           <div className="mb-16 text-center">
             <SectionTitle
               eyebrow="Наши услуги"
-              title="Решим любую проблему2"
+              title="Решим любую проблему"
               description="Мы выполняем полный спектр сантехнических работ — от мелкого ремонта до проектирования систем в частных домах."
               center
             />
@@ -386,7 +392,7 @@ export default function Home() {
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <div className="relative">
               <img
-                src="/src/assets/28ab1c20-a409-4d60-9624-0ca7b28dd879.png"
+                src={aboutImage}
                 alt="Наш мастер за работой"
                 className="h-[500px] w-full rounded-[3rem] object-cover shadow-2xl"
                 referrerPolicy="no-referrer"
@@ -531,8 +537,9 @@ export default function Home() {
                     setIsAutoPlay(false);
                     setCurrentProject(i);
                   }}
-                  className={`h-2 rounded-full transition-all ${currentProject === i ? 'w-8 bg-blue-600' : 'w-2 bg-slate-300'
-                    }`}
+                  className={`h-2 rounded-full transition-all ${
+                    currentProject === i ? 'w-8 bg-blue-600' : 'w-2 bg-slate-300'
+                  }`}
                   aria-label={`Открыть проект ${i + 1}`}
                 />
               ))}

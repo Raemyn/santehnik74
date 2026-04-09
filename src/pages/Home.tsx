@@ -195,6 +195,14 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [isAutoPlay]);
 
+  useEffect(() => {
+    // 🔥 прогрев сервера при заходе
+    fetch('https://santehnik74.onrender.com/api/health', {
+      method: 'GET',
+      cache: 'no-store',
+    }).catch(() => { });
+  }, []);
+
   const current = projects[currentProject];
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -537,9 +545,8 @@ export default function Home() {
                     setIsAutoPlay(false);
                     setCurrentProject(i);
                   }}
-                  className={`h-2 rounded-full transition-all ${
-                    currentProject === i ? 'w-8 bg-blue-600' : 'w-2 bg-slate-300'
-                  }`}
+                  className={`h-2 rounded-full transition-all ${currentProject === i ? 'w-8 bg-blue-600' : 'w-2 bg-slate-300'
+                    }`}
                   aria-label={`Открыть проект ${i + 1}`}
                 />
               ))}
